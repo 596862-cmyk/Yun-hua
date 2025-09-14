@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BNI雲華分會 - 新手村任務系統</title>
+    <title>BNI雲貴分會 - 新手村任務系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap');
@@ -34,7 +34,7 @@
             <div class="flex justify-center mb-8">
                 <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 max-w-md w-full border border-white/20">
                     <div class="text-center mb-8">
-                        <h1 class="text-4xl font-bold text-white mb-2">🏢 BNI雲華分會</h1>
+                        <h1 class="text-4xl font-bold text-white mb-2">🏢 BNI雲貴分會</h1>
                         <h2 class="text-2xl font-semibold text-blue-200 mb-4">新手村任務系統</h2>
                         <p class="text-lg text-blue-300">請輸入您的導生資訊</p>
                         <p class="text-sm text-yellow-300 mt-2">⚠️ 導生帳號由導師建立，無法自行註冊</p>
@@ -136,7 +136,7 @@
                     <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg" id="memberAvatar"></div>
                     <div>
                         <h3 class="text-lg font-semibold text-white" id="displayMemberName">導生姓名</h3>
-                        <p class="text-blue-200 text-sm">BNI雲華分會導生</p>
+                        <p class="text-blue-200 text-sm">BNI雲貴分會導生</p>
                     </div>
                 </div>
                 <div class="flex space-x-2">
@@ -145,7 +145,7 @@
             </div>
         </div>
         <div class="text-center mb-8">
-            <h1 class="text-5xl md:text-6xl font-bold text-white mb-2">🏢 BNI雲華分會</h1>
+            <h1 class="text-5xl md:text-6xl font-bold text-white mb-2">🏢 BNI雲貴分會</h1>
             <h2 class="text-3xl md:text-4xl font-semibold text-blue-200 mb-4">新手村任務系統</h2>
             <p class="text-xl text-blue-300">完成所有關卡，成為BNI專業導生！</p>
         </div>
@@ -227,7 +227,7 @@
         <div class="container mx-auto max-w-6xl">
             <div class="text-center mb-8">
                 <h1 class="text-3xl font-bold text-white mb-2">🔐 導師後台</h1>
-                <p class="text-blue-300">BNI雲華分會新手村管理系統</p>
+                <p class="text-blue-300">BNI雲貴分會新手村管理系統</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
                 <button type="button" id="showAddMemberBtn" class="bg-orange-600 hover:bg-orange-700 text-white p-4 rounded-lg font-semibold transition-all">➕ 新增導生</button>
@@ -332,8 +332,8 @@
         (function() {
             'use strict';
             
-            const SUPABASE_URL = 'https://qzseakkbfyniwuofcyhe.supabase.co'; 
-            const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF6c2Vha2tiZnluaXd1b2ZjeWhlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2MjAxMTAsImV4cCI6MjA3MzE5NjExMH0.bY5VUm9-4CJ059Pl4uwSQRWQVZrnomWDliZvnjL8uks'; 
+            const SUPABASE_URL = 'https://hdssnsnkagfjfbuvgfkn.supabase.co'; 
+            const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhkc3Nuc25rYWdmamZidXZnZmtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2MjAyMDksImV4cCI6MjA3MzE5NjIwOX0.UoSKuEbguyE-I2j8gRO_mclOffwkV6WFLwayjrkFsuY'; 
             const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
             
             let currentMember = null;
@@ -352,7 +352,7 @@
                 { id: 10, title: "參加人脈合作變現表培訓", description: "觀看人脈合作變現表教學影片", icon: "💰", difficulty: "進階", reward: "變現技能", category: "影片培訓", completionCondition: "觀看教學影片", videoUrl: "https://www.youtube.com/playlist?list=PLTMduYKemBTo1Vcmefgg7QhBL8oT4Ypkf", isRequired: true },
                 { id: 11, title: "【導師考核】人脈合作變現表", description: "完成人脈合作變現表並通過考核", icon: "💎", difficulty: "考核", reward: "變現表認證", category: "導師考核", completionCondition: "導師考核", isRequired: true },
                 { id: 12, title: "新會員見面會", description: "參與每月一次由區域排定時間的新人見面會", icon: "🤝", difficulty: "基礎", reward: "人脈建立", category: "實體活動", completionCondition: "參與每月一次由區域排定時間的新人見面會(一個月只有一次很重要)", isRequired: true },
-                { id: 13, title: "FB區域粉專按讚", description: "雲華分會FB點讚", icon: "👍", difficulty: "基礎", reward: "社群連結", category: "社交活動", completionCondition: "雲華分會FB點讚", fbUrl: "https://www.facebook.com/bni.yungui", isRequired: true },
+                { id: 13, title: "FB區域粉專按讚", description: "雲貴分會FB點讚", icon: "👍", difficulty: "基礎", reward: "社群連結", category: "社交活動", completionCondition: "雲貴分會FB點讚", fbUrl: "https://www.facebook.com/bni.yungui", isRequired: true },
                 { id: 14, title: "初階MSP", description: "報名區域培訓課程(與進階MSP擇一即可)", icon: "📈", difficulty: "進階", reward: "初階MSP證書", category: "線上課程", completionCondition: "報名區域培訓課程(與15項擇一即可)", courseUrl: "https://ally.nime.com.tw/html/memberLogin", isRequired: true },
                 { id: 15, title: "進階MSP", description: "報名區域培訓課程(與初階MSP擇一即可)", icon: "🚀", difficulty: "進階", reward: "進階MSP證書", category: "線上課程", completionCondition: "報名區域培訓課程(與14項擇一即可)", courseUrl: "https://ally.nime.com.tw/html/memberLogin", isRequired: true },
                 { id: 16, title: "會員成功藍圖", description: "參與導師八周特定主題", icon: "🗺️", difficulty: "進階", reward: "成功藍圖", category: "導師八周", completionCondition: "參與導師八周特定主題", isRequired: true },
@@ -711,7 +711,7 @@
                 const modal = document.getElementById('celebrationModal');
                 modal.querySelector('h3').textContent = '🎊 恭喜出村！🎊';
                 modal.querySelector('.text-6xl').textContent = '🏆';
-                modal.querySelector('#celebrationText').textContent = '恭喜你完成了BNI雲華分會新手村的所有必修任務！';
+                modal.querySelector('#celebrationText').textContent = '恭喜你完成了BNI雲貴分會新手村的所有必修任務！';
                 modal.querySelector('button').textContent = '繼續加油！';
                 modal.classList.add('flex');
                 modal.classList.remove('hidden');
@@ -1385,9 +1385,6 @@
     </script>
 </body>
 </html>
-by 投嘉雲彰區域 雲華分會 高屏區水電工程 吳志璘     V161行事曆版本
-
-
-
+by 投嘉雲彰區域 雲貴分會 高屏區水電工程 吳志璘     V161行事曆版本
 
 
