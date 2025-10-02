@@ -378,8 +378,9 @@
                         </select>
                     </div>
                     <div>
-                        <label for="taskCategory" class="block text-sm font-medium text-gray-700">分類</label>
-                        <select id="taskCategory" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></select>
+                        <label for="taskCategoryInput" class="block text-sm font-medium text-gray-700">分類</label>
+                        <input list="taskCategoryList" id="taskCategoryInput" required placeholder="選擇或輸入新分類" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+                        <datalist id="taskCategoryList"></datalist>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1230,7 +1231,7 @@
                     document.getElementById('taskCompletionCondition').value = task.completionCondition || '';
                     document.getElementById('taskIcon').value = task.icon;
                     document.getElementById('taskDifficulty').value = task.difficulty;
-                    document.getElementById('taskCategory').value = task.category;
+                    document.getElementById('taskCategoryInput').value = task.category || '';
                     document.getElementById('taskVideoUrl').value = task.videoUrl || '';
                     document.getElementById('taskFbUrl').value = task.fbUrl || '';
                     document.getElementById('taskCourseUrl').value = task.courseUrl || '';
@@ -1254,9 +1255,9 @@
                  const icons = ['📦','🏷️','🎤','✅','🗣️','💻','🔗','🎯','📊','💰','💎','🤝','👍','📈','🚀','🗺️','📘','🧙‍♂️','🌟','🚦','👁️','📋','✍️','📄','📝','🎪','👥','👔','🏆','💡','💬','🎉','📞','🏢','📈','🤝','🚀','💡','🎯','💬','🛠️','⚙️','📚','🎓','📝','💼','📈','📊','🔗','🤝','💡','🎯','💬','🛠️','⚙️','📚','🎓','📝','💼'];
                  iconSelect.innerHTML = [...new Set(icons)].map(icon => `<option value="${icon}">${icon}</option>`).join('');
 
-                 const categorySelect = document.getElementById('taskCategory');
+                 const categoryDatalist = document.getElementById('taskCategoryList');
                  const categories = [...new Set(tasksMaster.map(t => t.category).filter(Boolean))];
-                 categorySelect.innerHTML = categories.map(cat => `<option value="${cat}">${cat}</option>`).join('') + '<option value="new">--新增分類--</option>';
+                 categoryDatalist.innerHTML = categories.map(cat => `<option value="${cat}"></option>`).join('');
             }
 
             function closeTaskEditModal() {
@@ -1268,11 +1269,11 @@
             async function handleTaskFormSubmit(event) {
                 event.preventDefault();
                 const taskId = document.getElementById('taskEditId').value;
-                let category = document.getElementById('taskCategory').value;
-                if (category === 'new') {
-                    const newCategory = prompt("請輸入新的分類名稱：");
-                    if (!newCategory || newCategory.trim() === '') return;
-                    category = newCategory.trim();
+                const category = document.getElementById('taskCategoryInput').value.trim();
+
+                if (!category) {
+                    alert('請為任務指定一個分類。');
+                    return;
                 }
 
                 const taskData = {
@@ -1662,18 +1663,7 @@
                 document.getElementById('taskIsCountable').addEventListener('change', (e) => {
                     document.getElementById('taskCountableSettings').classList.toggle('hidden', !e.target.checked);
                 });
-                document.getElementById('taskCategory').addEventListener('change', (e) => {
-                     if (e.target.value === 'new') {
-                        const newCategory = prompt("請輸入新的分類名稱：");
-                        if (newCategory && newCategory.trim() !== '') {
-                            const option = new Option(newCategory.trim(), newCategory.trim(), true, true);
-                            e.target.add(option, e.target.options[e.target.options.length - 1]);
-                        } else {
-                            e.target.value = e.target.options[0].value;
-                        }
-                     }
-                });
-
+                
                 const requiredTotal = tasksMaster.filter(t => t.isRequired).length;
                 const mspCount = tasksMaster.some(t => t.id === 14 || t.id === 15) ? 1 : 0;
                 document.getElementById('totalTasks').textContent = requiredTotal - mspCount;
@@ -1688,6 +1678,4 @@
     </script>
 </body>
 </html>
-by 投嘉雲彰區域 雲華分會 高屏區水電工程 吳志璘     V162
-
-
+by 投嘉雲彰區域 雲華分會 高屏區水電工程 吳志璘     V162.1
