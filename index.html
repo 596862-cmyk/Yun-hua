@@ -90,19 +90,27 @@
                 </div>
             </div>
             
-            <div id="calendarSection" class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 mb-8">
-                <div class="text-center mb-6">
-                    <h2 class="text-2xl font-bold text-white mb-2">📅 分會行事曆</h2>
+            <div class="flex flex-col md:flex-row gap-8 mb-8">
+                <div id="calendarSection" class="w-full md:w-1/2 bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+                    <div class="text-center mb-6">
+                        <h2 class="text-2xl font-bold text-white mb-2">📅 分會行事曆</h2>
+                    </div>
+                    <div id="publicCalendarList" class="space-y-3">
+                    </div>
+                    <button id="toggleCalendarBtn" class="w-full mt-4 px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all hidden">
+                        顯示更多
+                    </button>
                 </div>
-                <div id="publicCalendarList" class="space-y-3">
-                </div>
-            </div>
 
-            <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-                <div class="text-center mb-6">
-                    <h2 class="text-2xl font-bold text-white mb-2">👋 最新來賓</h2>
-                </div>
-                <div id="publicGuestListContainer" class="space-y-3">
+                <div class="w-full md:w-1/2 bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+                    <div class="text-center mb-6">
+                        <h2 class="text-2xl font-bold text-white mb-2">👋 最新來賓</h2>
+                    </div>
+                    <div id="publicGuestListContainer" class="space-y-3">
+                    </div>
+                    <button id="toggleGuestBtn" class="w-full mt-4 px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all hidden">
+                        顯示更多
+                    </button>
                 </div>
             </div>
 
@@ -1389,8 +1397,12 @@
             
             async function showPublicGuestList() {
                 const container = document.getElementById('publicGuestListContainer');
+                const toggleBtn = document.getElementById('toggleGuestBtn'); // 取得按鈕
                 container.innerHTML = `<div class="text-white text-center p-4">正在載入最新來賓...</div>`;
-                const { data: guests, error } = await supabaseClient.from('guests').select('*').order('created_at', { ascending: false }).limit(10);
+                toggleBtn.classList.add('hidden'); // 預先隱藏按鈕
+                
+                // 拿掉 limit(10)，改為全抓
+                const { data: guests, error } = await supabaseClient.from('guests').select('*').order('created_at', { ascending: false });
                 
                 if (error) {
                     container.innerHTML = `<div class="text-red-400 text-center p-4">無法載入來賓列表</div>`;
@@ -1401,12 +1413,12 @@
                     return;
                 }
 
-                container.innerHTML = guests.map(guest => {
+                const allItemsHtml = guests.map(guest => {
                     const interestColorClass = guest.interest_level === '高' ? 'bg-red-500/50 text-red-200' : 
                                                guest.interest_level === '中' ? 'bg-yellow-500/50 text-yellow-200' : 
                                                'bg-green-500/50 text-green-200';
                     return `
-                    <div class="bg-white/5 rounded-lg p-3 flex items-center justify-between">
+                    <div class="bg-white/5 rounded-lg p-3 flex items-center justify-between guest-item">
                         <div>
                             <p class="text-white font-semibold">${guest.name} <span class="text-sm font-normal text-gray-300">- ${guest.profession}</span></p>
                             <p class="text-xs text-blue-200">介紹人: ${guest.referrer}</p>
@@ -1418,6 +1430,22 @@
                         </div>
                     </div>`;
                 }).join('');
+                
+                container.innerHTML = allItemsHtml;
+
+                // 檢查是否需要收合
+                const items = container.querySelectorAll('.guest-item');
+                if (items.length > 3) {
+                    // 預設只顯示 3 筆
+                    items.forEach((item, index) => {
+                        if (index >= 3) {
+                            item.classList.add('hidden');
+                        }
+                    });
+                    toggleBtn.textContent = `顯示全部 ${items.length} 位來賓`;
+                    toggleBtn.classList.remove('hidden');
+                    toggleBtn.dataset.state = 'collapsed'; // 設定目前狀態
+                }
             }
 
             async function addGuest() {
@@ -1522,7 +1550,10 @@
             // ★★★ 行事曆功能 (JS) START ★★★
             async function showPublicCalendar() {
                 const container = document.getElementById('publicCalendarList');
+                const toggleBtn = document.getElementById('toggleCalendarBtn'); // 取得按鈕
                 container.innerHTML = `<div class="text-white text-center p-4">正在載入活動...</div>`;
+                toggleBtn.classList.add('hidden'); // 預先隱藏按鈕
+
                 const { data: events, error } = await supabaseClient.from('calendar_events').select('*').order('event_date', { ascending: true });
                 
                 if (error) {
@@ -1534,12 +1565,29 @@
                     return;
                 }
 
-                container.innerHTML = events.map(event => `
-                    <div class="bg-white/5 rounded-lg p-3">
+                // 產生所有項目的 HTML
+                const allItemsHtml = events.map(event => `
+                    <div class="bg-white/5 rounded-lg p-3 calendar-item">
                         <p class="text-yellow-300 font-semibold">${event.event_date}</p>
                         <p class="text-white font-semibold mt-1">${event.title}</p>
                         ${event.description ? `<p class="text-xs text-blue-200 mt-1">${event.description}</p>`: ''}
                     </div>`).join('');
+                
+                container.innerHTML = allItemsHtml;
+
+                // 檢查是否需要收合
+                const items = container.querySelectorAll('.calendar-item');
+                if (items.length > 3) {
+                    // 預設只顯示 3 筆
+                    items.forEach((item, index) => {
+                        if (index >= 3) {
+                            item.classList.add('hidden');
+                        }
+                    });
+                    toggleBtn.textContent = `顯示全部 ${items.length} 筆活動`;
+                    toggleBtn.classList.remove('hidden');
+                    toggleBtn.dataset.state = 'collapsed'; // 設定目前狀態
+                }
             }
             
             async function showCalendarManagement() {
@@ -1693,6 +1741,51 @@
                     document.getElementById('taskCountableSettings').classList.toggle('hidden', !e.target.checked);
                 });
                 
+                // Toggle public lists
+                document.getElementById('toggleCalendarBtn')?.addEventListener('click', () => {
+                    const container = document.getElementById('publicCalendarList');
+                    const btn = document.getElementById('toggleCalendarBtn');
+                    const items = container.querySelectorAll('.calendar-item');
+                    
+                    if (btn.dataset.state === 'collapsed') {
+                        // 展開
+                        items.forEach(item => item.classList.remove('hidden'));
+                        btn.textContent = '收合活動列表';
+                        btn.dataset.state = 'expanded';
+                    } else {
+                        // 收合
+                        items.forEach((item, index) => {
+                            if (index >= 3) {
+                                item.classList.add('hidden');
+                            }
+                        });
+                        btn.textContent = `顯示全部 ${items.length} 筆活動`;
+                        btn.dataset.state = 'collapsed';
+                    }
+                });
+                
+                document.getElementById('toggleGuestBtn')?.addEventListener('click', () => {
+                    const container = document.getElementById('publicGuestListContainer');
+                    const btn = document.getElementById('toggleGuestBtn');
+                    const items = container.querySelectorAll('.guest-item');
+                    
+                    if (btn.dataset.state === 'collapsed') {
+                        // 展開
+                        items.forEach(item => item.classList.remove('hidden'));
+                        btn.textContent = '收合來賓列表';
+                        btn.dataset.state = 'expanded';
+                    } else {
+                        // 收合
+                        items.forEach((item, index) => {
+                            if (index >= 3) {
+                                item.classList.add('hidden');
+                            }
+                        });
+                        btn.textContent = `顯示全部 ${items.length} 位來賓`;
+                        btn.dataset.state = 'collapsed';
+                    }
+                });
+                
                 const requiredTotal = tasksMaster.filter(t => t.isRequired).length;
                 const mspCount = tasksMaster.some(t => t.id === 14 || t.id === 15) ? 1 : 0;
                 document.getElementById('totalTasks').textContent = requiredTotal - mspCount;
@@ -1707,4 +1800,4 @@
     </script>
 </body>
 </html>
-by 投嘉雲彰區域 雲華分會 高屏區水電工程 吳志璘     V162.2
+by 投嘉雲彰區域 雲華分會 高屏區水電工程 吳志璘     V163
